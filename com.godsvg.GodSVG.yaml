@@ -47,6 +47,7 @@ modules:
       - /app/godot/editor_data
     build-commands:
       - /app/godot/godot --headless --export-release Linux /app/bin/GodSVG
+      - install -Dm644 com.godsvg.GodSVG.desktop /app/share/applications/com.godsvg.GodSVG.desktop
     sources:
       - type: git
         url: https://github.com/MewPurPur/GodSVG.git
@@ -56,3 +57,5 @@ modules:
           type: git
           tag-pattern: ^v(\d.+)$
           is-main-source: true
+      - type: file
+        path: assets/com.godsvg.GodSVG.desktop

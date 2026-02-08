@@ -91,6 +91,16 @@ jobs:
               "sha256": strenv(GODOT_ARCHIVE_SHA256)
             }
           ' com.godsvg.GodSVG.yaml
+      
+      - name: Update .desktop file
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: |
+          DESKTOP_FILE=$(cat .flatpak-builder/build/GodSVG-999/assets/GodSVG.desktop)
+
+          # Fix executable capitalization
+          DESKTOP_FILE=$(echo "$DESKTOP_FILE" | sed 's|Exec=godsvg|Exec=GodSVG|')
+
+          echo "$DESKTOP_FILE" > assets/com.godsvg.GodSVG.desktop
 
       - name: Create Pull Request
         if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
