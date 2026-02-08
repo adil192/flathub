@@ -1,0 +1,28 @@
+From 743f089f267174b6a58e6ae03077bd6651848d8a Mon Sep 17 00:00:00 2001
+From: Adil Hanney <adilhanney@disroot.org>
+Date: Sun, 8 Feb 2026 22:19:47 +0000
+Subject: [PATCH] fix(flatpak): remove `file://` prefix
+
+---
+ src/utils/FileUtils.gd | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/src/utils/FileUtils.gd b/src/utils/FileUtils.gd
+index 48c14e45..7e7ac239 100644
+--- a/src/utils/FileUtils.gd
++++ b/src/utils/FileUtils.gd
+@@ -216,6 +216,11 @@ static func open_custom_import_dialog(extensions: PackedStringArray, completion_
+ # Preprocessing step where all files with wrong extensions are discarded.
+ static func _start_file_import_process(file_paths: PackedStringArray, completion_callback: Callable,
+ allowed_extensions: PackedStringArray, show_incorrect_extension_errors := true) -> void:
++	for i in range(file_paths.size()):
++		var file_path = file_paths[i]
++		if file_path.begins_with("file://"): # Flatpak portals add this prefix, so remove it
++			file_paths[i] = file_path.replace("file://", "")
++
+ 	if not show_incorrect_extension_errors:
+ 		for i in range(file_paths.size() - 1, -1, -1):
+ 			if not file_paths[i].get_extension() in allowed_extensions:
+-- 
+2.53.0
+
