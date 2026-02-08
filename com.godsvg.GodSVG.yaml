@@ -8,16 +8,11 @@ finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
-
 build-options:
   env:
-    PROJECT_NAME: GodSVG
-    # TODO: Automatically update this and disabled_classes.gdbuild from upstream
     BUILD_TEMPLATE_OPTIONS: target=template_release lto=full production=yes deprecated=no minizip=no d3d12=no vulkan=no use_volk=no disable_3d=yes disable_physics_2d=yes disable_navigation_2d=yes modules_enabled_by_default=no module_freetype_enabled=yes module_gdscript_enabled=yes module_svg_enabled=yes module_jpg_enabled=yes module_text_server_adv_enabled=yes graphite=no module_webp_enabled=yes module_mbedtls_enabled=yes build_profile=./disabled_classes.gdbuild
-
 modules:
   # TODO: Investigate if accesskit is needed for screenreaders: https://docs.godotengine.org/en/latest/engine_details/development/compiling/compiling_for_linuxbsd.html#compiling-with-accesskit-support
-
   - name: scons
     buildsystem: simple
     cleanup: ['*']
@@ -31,7 +26,6 @@ modules:
           type: anitya
           project-id: 4770
           url-template: https://downloads.sourceforge.net/project/scons/scons/$version/SCons-$version.tar.gz
-
   - name: Godot
     buildsystem: simple
     cleanup: ['*']
@@ -39,20 +33,14 @@ modules:
       - python3 /app/bin/scons p=linuxbsd -j "$FLATPAK_BUILDER_N_JOBS"
       - install -Dm755 bin/godot.linuxbsd.editor.* /app/godot/godot
       - touch /app/godot/._sc_ # godot self-contained mode
-
       - python3 /app/bin/scons p=linuxbsd -j "$FLATPAK_BUILDER_N_JOBS" ${BUILD_TEMPLATE_OPTIONS}
       - install -Dm755 bin/godot.linuxbsd.template_release.* /app/godot/editor_data/export_templates/$(python3 -c 'import version; print(f"{version.major}.{version.minor}.{version.status}")')/linux_release.${FLATPAK_ARCH}
     sources:
       - type: archive
-        sha256: 900ad0f6241b8051daa569cee1b07b6e30c4cb4f804471f72256d052334c0550
-        url: https://github.com/godotengine/godot/releases/download/4.6-stable/godot-4.6-stable.tar.xz
-        x-checker-data:
-          type: anitya
-          project-id: 373975
-          url-template: https://github.com/godotengine/godot/releases/download/$version-stable/godot-$version-stable.tar.xz
+        sha256: 2cdb383d68bfe646c832064b9063310745e8db03a2e4b59f5946ee934b95c67d
+        url: https://github.com/godotengine/godot/releases/download/4.5-stable/godot-4.5-stable.tar.xz
       - type: file
         path: assets/disabled_classes.gdbuild
-
   - name: GodSVG
     buildsystem: simple
     cleanup:
@@ -67,3 +55,4 @@ modules:
         x-checker-data:
           type: git
           tag-pattern: ^v(\d.+)$
+          is-main-source: true
