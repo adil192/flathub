@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>com.godsvg.GodSVG</id>
+
+  <name>GodSVG</name>
+  <summary>Edit SVG code in real-time</summary>
+
+  <launchable type="desktop-id">com.godsvg.GodSVG.desktop</launchable>
+
+  <developer id="com.godsvg">
+    <name>MewPurPur</name>
+  </developer>
+
+  <url type="homepage">https://www.godsvg.com/</url>
+  <url type="bugtracker">https://github.com/MewPurPur/GodSVG/issues</url>
+  <url type="translate">https://github.com/MewPurPur/GodSVG/tree/main/translations</url>
+  <url type="donation">https://github.com/sponsors/MewPurPur</url>
+  <url type="vcs-browser">https://github.com/MewPurPur/GodSVG</url>
+
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+
+  <supports>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <control>tablet</control>
+  </supports>
+  <requires>
+    <display_length compare="ge">360</display_length>
+  </requires>
+
+  <content_rating type="oars-1.1" />
+
+  <description>
+    <p>
+      GodSVG is a structured SVG editor. Unlike other editors, GodSVG represents the SVG code directly, doesn&apos;t add any metadata, and even lets you edit the code in real time. It aims to be a structured SVG editor with low abstraction, producing clean, precise, optimized files.
+    </p>
+    <p>
+      GodSVG is not officially released, it&apos;s currently in late alpha.
+    </p>
+    <p>
+      GodSVG is almost entirely made by my work in my free time. If you like this project and want to help secure it through its development, you can find donation links on GitHub to make it a less financially stupid endeavor for me.
+    </p>
+    <p>
+      Features:
+    </p>
+    <ul>
+      <li>
+        Interactive SVG editing:
+        Modify individual elements of an SVG file using a user-friendly interface.
+      </li>
+      <li>
+        Real-time code:
+        As you manipulate elements in the UI, code is instantly generated and can be edited.
+        Generated code is human-readable, since no metadata is added.
+      </li>
+      <li>
+        Optimized SVGs:
+        The generated SVG files are small and efficient, and GodSVG provides various options to assist with optimization.
+      </li>
+    </ul>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://www.godsvg.com/assets/screenshot1.webp</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.godsvg.com/assets/screenshot2.webp</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.godsvg.com/assets/screenshot3.webp</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.godsvg.com/assets/screenshot4.webp</image>
+    </screenshot>
+    <screenshot>
+      <image>https://www.godsvg.com/assets/screenshot5.webp</image>
+    </screenshot>
+  </screenshots>
+</component>
