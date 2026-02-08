@@ -48,6 +48,7 @@ modules:
     build-commands:
       - /app/godot/godot --headless --export-release Linux /app/bin/GodSVG
       - install -Dm644 com.godsvg.GodSVG.desktop /app/share/applications/com.godsvg.GodSVG.desktop
+      - install -Dm644 assets/logos/icon.svg /app/share/icons/hicolor/scalable/apps/com.godsvg.GodSVG.svg
     sources:
       - type: git
         url: https://github.com/MewPurPur/GodSVG.git

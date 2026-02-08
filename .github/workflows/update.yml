@@ -97,8 +97,9 @@ jobs:
         run: |
           DESKTOP_FILE=$(cat .flatpak-builder/build/GodSVG-999/assets/GodSVG.desktop)
 
-          # Fix executable capitalization
+          # Capitalize "GodSVG" and set icon
           DESKTOP_FILE=$(echo "$DESKTOP_FILE" | sed 's|Exec=godsvg|Exec=GodSVG|')
+          DESKTOP_FILE=$(echo "$DESKTOP_FILE" | sed 's|Icon=godsvg|Icon=com.godsvg.GodSVG|')
 
           echo "$DESKTOP_FILE" > assets/com.godsvg.GodSVG.desktop
 
