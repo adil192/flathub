@@ -8,6 +8,7 @@ finish-args:
   - --share=ipc
   - --socket=wayland
   - --socket=fallback-x11
+  - --filesystem=home
   - --talk-name=org.a11y.Bus
 build-options:
   env:
