@@ -74,9 +74,6 @@ modules:
           type: git
           tag-pattern: ^v(\d.+)$
           is-main-source: true
-      - type: patch
-        # https://github.com/MewPurPur/GodSVG/pull/1600
-        path: patches/0001-fix-flatpak-parse-file-uri.patch
       - type: file
         path: assets/com.godsvg.GodSVG.desktop
       - type: file
