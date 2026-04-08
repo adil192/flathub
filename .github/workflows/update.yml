@@ -58,7 +58,7 @@ jobs:
           repository: MewPurPur/GodSVG
           ref: ${{ steps.upstream_tag.outputs.UPSTREAM_TAG }}
           path: .flatpak-builder/build/GodSVG-999
-      
+
       - name: Update disabled_classes.gdbuild
         if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
         run: cp .flatpak-builder/build/GodSVG-999/.github/disabled_classes.gdbuild assets/disabled_classes.gdbuild
@@ -78,9 +78,9 @@ jobs:
       - name: Update Godot
         if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
         run: |
-          GODOT_FEATURE_VERSION=$(yq e '.env.GODOT_FEATURE_VERSION' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
-          GODOT_RELEASE=$(yq e '.env.GODOT_RELEASE' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
-          GODOT_TAG="$GODOT_FEATURE_VERSION-$GODOT_RELEASE"
+          GODOT_VERSION=$(yq e '.env.GODOT_VERSION' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
+          GODOT_RELEASE_TYPE=$(yq e '.env.GODOT_RELEASE_TYPE' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
+          GODOT_TAG="$GODOT_VERSION-$GODOT_RELEASE_TYPE"
 
           export GODOT_ARCHIVE_URL="https://github.com/godotengine/godot/releases/download/$GODOT_TAG/godot-$GODOT_TAG.tar.xz"
           export GODOT_ARCHIVE_SHA256=$(curl -sL "$GODOT_ARCHIVE_URL.sha256" | cut -d' ' -f1)
@@ -91,7 +91,7 @@ jobs:
               "sha256": strenv(GODOT_ARCHIVE_SHA256)
             }
           ' com.godsvg.GodSVG.yaml
-      
+
       - name: Update .desktop file
         if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
         run: |

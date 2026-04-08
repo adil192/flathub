@@ -39,8 +39,8 @@ modules:
       - install -Dm755 bin/godot.linuxbsd.template_release.* /app/godot/editor_data/export_templates/$(python3 -c 'import version; print(f"{version.major}.{version.minor}.{version.status}")')/linux_release.${FLATPAK_ARCH}
     sources:
       - type: archive
-        sha256: 2cdb383d68bfe646c832064b9063310745e8db03a2e4b59f5946ee934b95c67d
-        url: https://github.com/godotengine/godot/releases/download/4.5-stable/godot-4.5-stable.tar.xz
+        sha256: 900ad0f6241b8051daa569cee1b07b6e30c4cb4f804471f72256d052334c0550
+        url: https://github.com/godotengine/godot/releases/download/4.6-stable/godot-4.6-stable.tar.xz
       - type: file
         path: assets/disabled_classes.gdbuild
   - name: AccessKit
@@ -49,8 +49,8 @@ modules:
       - install -Dm755 lib/linux/${FLATPAK_ARCH}/shared/libaccesskit.so /app/bin/libaccesskit.so
     sources:
       - type: archive
-        sha256: 967c457e13c6adbe43f875b3c3bd9984e9e0e8e9708a1e82f396ea0364b5e593
-        url: https://github.com/godotengine/godot-accesskit-c-static/releases/download/0.18.0/accesskit-c-0.18.0.zip
+        sha256: 1f8d66c504cc39bc4ffe289ffbeea6eb7cb88df6b1d33dc098a38c30cb01d291
+        url: https://github.com/godotengine/godot-accesskit-c-static/releases/download/0.21.2-1/accesskit-c-0.21.2-1.zip
         x-checker-data:
           type: json
           url: https://api.github.com/repos/godotengine/godot-accesskit-c-static/releases/latest
@@ -68,8 +68,8 @@ modules:
     sources:
       - type: git
         url: https://github.com/MewPurPur/GodSVG.git
-        tag: v1.0-alpha13
-        commit: b9ad9f5b1ec5590b9e215ca6516199d26dced2eb
+        tag: v1.0-alpha14
+        commit: 1c4e6bc9ef460e5d8f9d4c0d01425d2e6dc7e660
         x-checker-data:
           type: git
           tag-pattern: ^v(\d.+)$
