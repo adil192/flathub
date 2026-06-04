@@ -1,0 +1,36 @@
+diff --git a/no_export/distribution/com.godsvg.GodSVG.metainfo.xml b/no_export/distribution/com.godsvg.GodSVG.metainfo.xml
+index 1c1327dc..2abaceca 100644
+--- a/no_export/distribution/com.godsvg.GodSVG.metainfo.xml
++++ b/no_export/distribution/com.godsvg.GodSVG.metainfo.xml
+@@ -37,7 +37,30 @@
+ 			<caption>A vector graphic being edited in GodSVG</caption>
+ 			<image>https://godsvg.com/assets/screenshot1.webp</image>
+ 		</screenshot>
++		<screenshot>
++			<image>https://www.godsvg.com/assets/screenshot2.webp</image>
++		</screenshot>
++		<screenshot>
++			<image>https://www.godsvg.com/assets/screenshot3.webp</image>
++		</screenshot>
++		<screenshot>
++			<image>https://www.godsvg.com/assets/screenshot4.webp</image>
++		</screenshot>
++		<screenshot>
++			<image>https://www.godsvg.com/assets/screenshot5.webp</image>
++		</screenshot>
+ 	</screenshots>
+ 
+-	<developer_name>The GodSVG community</developer_name>
++	<developer id="com.godsvg">
++		<name>The GodSVG community</name>
++	</developer>
++	
++  <supports>
++    <control>pointing</control>
++    <control>keyboard</control>
++    <control>tablet</control>
++  </supports>
++  <requires>
++    <display_length compare="ge">360</display_length>
++  </requires>
+ </component>
