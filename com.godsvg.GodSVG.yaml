@@ -62,7 +62,7 @@ modules:
       - /app/godot/editor_data
     build-commands:
       - /app/godot/godot --headless --export-release Linux /app/bin/GodSVG
-      - install -Dm644 com.godsvg.GodSVG.desktop /app/share/applications/com.godsvg.GodSVG.desktop
+      - install -Dm644 no_export/distribution/com.godsvg.GodSVG.desktop /app/share/applications/com.godsvg.GodSVG.desktop
       - install -Dm644 com.godsvg.GodSVG.metainfo.xml /app/share/metainfo/com.godsvg.GodSVG.metainfo.xml
       - install -Dm644 assets/logos/icon.svg /app/share/icons/hicolor/scalable/apps/com.godsvg.GodSVG.svg
     sources:
@@ -74,7 +74,7 @@ modules:
           type: git
           tag-pattern: ^v(\d.+)$
           is-main-source: true
-      - type: file
-        path: assets/com.godsvg.GodSVG.desktop
+      - type: patch
+        path: patches/com.godsvg.GodSVG.desktop.patch
       - type: file
         path: assets/com.godsvg.GodSVG.metainfo.xml

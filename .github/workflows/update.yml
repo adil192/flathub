@@ -92,17 +92,6 @@ jobs:
             }
           ' com.godsvg.GodSVG.yaml
 
-      - name: Update .desktop file
-        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
-        run: |
-          DESKTOP_FILE=$(cat .flatpak-builder/build/GodSVG-999/assets/GodSVG.desktop)
-
-          # Capitalize "GodSVG" and set icon
-          DESKTOP_FILE=$(echo "$DESKTOP_FILE" | sed 's|Exec=godsvg|Exec=GodSVG|')
-          DESKTOP_FILE=$(echo "$DESKTOP_FILE" | sed 's|Icon=godsvg|Icon=com.godsvg.GodSVG|')
-
-          echo "$DESKTOP_FILE" > assets/com.godsvg.GodSVG.desktop
-
       - name: Create Pull Request
         if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
         uses: peter-evans/create-pull-request@v7
