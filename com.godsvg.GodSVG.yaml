@@ -1,0 +1,80 @@
+app-id: com.godsvg.GodSVG
+runtime: org.freedesktop.Platform
+runtime-version: 25.08
+sdk: org.freedesktop.Sdk
+command: GodSVG
+finish-args:
+  - --device=dri
+  - --share=ipc
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --talk-name=org.a11y.Bus
+  # Needed for drag-and-drop functionality
+  - --filesystem=home
+build-options:
+  env:
+    BUILD_TEMPLATE_OPTIONS: target=template_release lto=full production=yes deprecated=no minizip=no d3d12=no vulkan=no use_volk=no disable_3d=yes disable_physics_2d=yes disable_navigation_2d=yes modules_enabled_by_default=no module_freetype_enabled=yes module_gdscript_enabled=yes module_svg_enabled=yes module_jpg_enabled=yes module_webp_enabled=yes module_dds_enabled=yes module_text_server_adv_enabled=yes graphite=no module_mbedtls_enabled=yes build_profile=./disabled_classes.gdbuild
+modules:
+  - name: scons
+    buildsystem: simple
+    cleanup: ['*']
+    build-commands:
+      - pip3 install --no-index --no-build-isolation --prefix=/app .
+    sources:
+      - type: archive
+        sha256: 99c0e94a42a2c1182fa6859b0be697953db07ba936ecc9817ae0d218ced20b15
+        url: https://downloads.sourceforge.net/project/scons/scons/4.10.1/SCons-4.10.1.tar.gz
+        x-checker-data:
+          type: anitya
+          project-id: 4770
+          url-template: https://downloads.sourceforge.net/project/scons/scons/$version/SCons-$version.tar.gz
+  - name: Godot
+    buildsystem: simple
+    cleanup: ['*']
+    build-commands:
+      - python3 /app/bin/scons p=linuxbsd -j "$FLATPAK_BUILDER_N_JOBS"
+      - install -Dm755 bin/godot.linuxbsd.editor.* /app/godot/godot
+      - touch /app/godot/._sc_ # godot self-contained mode
+      - python3 /app/bin/scons p=linuxbsd -j "$FLATPAK_BUILDER_N_JOBS" ${BUILD_TEMPLATE_OPTIONS}
+      - install -Dm755 bin/godot.linuxbsd.template_release.* /app/godot/editor_data/export_templates/$(python3 -c 'import version; print(f"{version.major}.{version.minor}.{version.status}")')/linux_release.${FLATPAK_ARCH}
+    sources:
+      - type: archive
+        sha256: 900ad0f6241b8051daa569cee1b07b6e30c4cb4f804471f72256d052334c0550
+        url: https://github.com/godotengine/godot/releases/download/4.6-stable/godot-4.6-stable.tar.xz
+      - type: file
+        path: assets/disabled_classes.gdbuild
+  - name: AccessKit
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 lib/linux/${FLATPAK_ARCH}/shared/libaccesskit.so /app/bin/libaccesskit.so
+    sources:
+      - type: archive
+        sha256: 1f8d66c504cc39bc4ffe289ffbeea6eb7cb88df6b1d33dc098a38c30cb01d291
+        url: https://github.com/godotengine/godot-accesskit-c-static/releases/download/0.21.2-1/accesskit-c-0.21.2-1.zip
+        x-checker-data:
+          type: json
+          url: https://api.github.com/repos/godotengine/godot-accesskit-c-static/releases/latest
+          version-query: .tag_name
+          url-query: .assets[0].browser_download_url
+  - name: GodSVG
+    buildsystem: simple
+    cleanup:
+      - /app/godot/editor_data
+    build-commands:
+      - /app/godot/godot --headless --export-release Linux /app/bin/GodSVG
+      - install -Dm644 no_export/distribution/com.godsvg.GodSVG.desktop /app/share/applications/com.godsvg.GodSVG.desktop
+      - install -Dm644 no_export/distribution/com.godsvg.GodSVG.metainfo.xml /app/share/metainfo/com.godsvg.GodSVG.metainfo.xml
+      - install -Dm644 assets/logos/icon.svg /app/share/icons/hicolor/scalable/apps/com.godsvg.GodSVG.svg
+    sources:
+      - type: git
+        url: https://github.com/MewPurPur/GodSVG.git
+        tag: v1.0-alpha15
+        commit: 8d44d09b4c2c2578b0ca410fc0972c84b4708c1a
+        x-checker-data:
+          type: git
+          tag-pattern: ^v(\d.+)$
+          is-main-source: true
+      - type: patch
+        path: patches/com.godsvg.GodSVG.desktop.patch
+      - type: patch
+        path: patches/com.godsvg.GodSVG.metainfo.xml.patch

@@ -1,0 +1,15 @@
+diff --git a/no_export/distribution/com.godsvg.GodSVG.desktop b/no_export/distribution/com.godsvg.GodSVG.desktop
+index f36304ce..3664c475 100644
+--- a/no_export/distribution/com.godsvg.GodSVG.desktop
++++ b/no_export/distribution/com.godsvg.GodSVG.desktop
+@@ -16,8 +16,8 @@ Comment[zh_CN]=结构化SVG编辑应用
+ Comment[et]=Vektorkraafika rakendus SVG struktureeritud redigeerimiseks
+ Comment[ru]=Графическое приложение для структурированого редактория векторных изображений
+ Comment[uk]=Графічний додаток для структурованого редагування векторних зображень
+-Exec=godsvg %U
+-Icon=godsvg
++Exec=GodSVG %U
++Icon=com.godsvg.GodSVG
+ Terminal=false
+ Type=Application
+ MimeType=image/svg+xml;

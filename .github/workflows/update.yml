@@ -1,0 +1,105 @@
+name: Update
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Check for updates every 2 days at 20:35 (random time to avoid spikes in GitHub Actions load)
+    - cron: '35 20 */2 * *'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@v6
+
+      - name: Set up Flatpak
+        run: |
+          sudo apt-get install -y flatpak
+          flatpak remote-add --if-not-exists --user flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak install flathub org.flathub.flatpak-external-data-checker org.freedesktop.Platform//25.08 org.freedesktop.Sdk//25.08 -y
+
+      - name: Check if update is needed
+        id: check_update
+        run: |
+          set +e
+          flatpak run org.flathub.flatpak-external-data-checker com.godsvg.GodSVG.yaml --check-outdated --require-important-update
+          EXIT_CODE=$?
+          set -e
+
+          if [ $EXIT_CODE -eq 0 ]; then
+            echo "No update found"
+            echo "UPDATE_NEEDED=false" >> $GITHUB_OUTPUT
+          else
+            echo "Update found"
+            echo "UPDATE_NEEDED=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update app version
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: flatpak run org.flathub.flatpak-external-data-checker com.godsvg.GodSVG.yaml --edit
+
+      - name: Get upstream tag
+        id: upstream_tag
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: |
+          UPSTREAM_TAG=$(yq e '.modules[-1].sources[0].tag' com.godsvg.GodSVG.yaml)
+          echo "UPSTREAM_TAG: $UPSTREAM_TAG"
+          echo "UPSTREAM_TAG=$UPSTREAM_TAG" >> $GITHUB_OUTPUT
+
+      - name: Checkout upstream
+        uses: actions/checkout@v6
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        with:
+          repository: MewPurPur/GodSVG
+          ref: ${{ steps.upstream_tag.outputs.UPSTREAM_TAG }}
+          path: .flatpak-builder/build/GodSVG-999
+
+      - name: Update disabled_classes.gdbuild
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: cp .flatpak-builder/build/GodSVG-999/.github/disabled_classes.gdbuild assets/disabled_classes.gdbuild
+
+      - name: Update BUILD_TEMPLATE_OPTIONS
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: |
+          BUILD_OPTIONS=$(yq e '.env.BUILD_OPTIONS' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
+
+          # Fix path to ./disabled_classes.gdbuild
+          BUILD_OPTIONS=$(echo "$BUILD_OPTIONS" | sed 's|build_profile=../godsvg/.github/disabled_classes.gdbuild|build_profile=./disabled_classes.gdbuild|')
+
+          # Set BUILD_TEMPLATE_OPTIONS in com.godsvg.GodSVG.yaml
+          export BUILD_OPTIONS="$BUILD_OPTIONS"
+          yq e -i '.build-options.env.BUILD_TEMPLATE_OPTIONS = strenv(BUILD_OPTIONS)' com.godsvg.GodSVG.yaml
+
+      - name: Update Godot
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        run: |
+          GODOT_VERSION=$(yq e '.env.GODOT_VERSION' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
+          GODOT_RELEASE_TYPE=$(yq e '.env.GODOT_RELEASE_TYPE' .flatpak-builder/build/GodSVG-999/.github/workflows/export-optimized.yml)
+          GODOT_TAG="$GODOT_VERSION-$GODOT_RELEASE_TYPE"
+
+          export GODOT_ARCHIVE_URL="https://github.com/godotengine/godot/releases/download/$GODOT_TAG/godot-$GODOT_TAG.tar.xz"
+          export GODOT_ARCHIVE_SHA256=$(curl -sL "$GODOT_ARCHIVE_URL.sha256" | cut -d' ' -f1)
+
+          yq e -i '
+            (.modules[] | select(.name == "Godot").sources[0]) |= . + {
+              "url": strenv(GODOT_ARCHIVE_URL),
+              "sha256": strenv(GODOT_ARCHIVE_SHA256)
+            }
+          ' com.godsvg.GodSVG.yaml
+
+      - name: Create Pull Request
+        if: steps.check_update.outputs.UPDATE_NEEDED == 'true'
+        uses: peter-evans/create-pull-request@v7
+        env:
+          SUMMARY: "Update GodSVG to ${{ steps.upstream_tag.outputs.UPSTREAM_TAG }}"
+        with:
+          title: ${{ env.SUMMARY }}
+          commit-message: ${{ env.SUMMARY }}
+          branch: "update/GodSVG/${{ steps.upstream_tag.outputs.UPSTREAM_TAG }}"
+          body: ${{ env.SUMMARY }}
+          assignees: adil192, MewPurPur
